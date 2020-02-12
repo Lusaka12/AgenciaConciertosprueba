@@ -20,7 +20,7 @@ public class Informe {
     protected long id;//atributo que sirve para identificarel ID //  valores validos numero entero mayor que 0
     private boolean revisado = false;//Campo para indicar si está revisado o no // valores validos true o false. 
     private String descripcion;//atributo que sirve para guardar la descripcion // valores validos cadena de caracteres de 20 caracteres
-    private Gira gira; //atributo que indica la gira a la que va asociado el informe
+    private Gira gira; 
 
     public long getId() {
         return id;
@@ -57,13 +57,7 @@ public class Informe {
     }
 
     public void setGira(Gira gira) {
-        try {
-            InformeException.validaGira(gira);
-            this.gira = gira;
-        } catch (InformeException ex) {
-            System.out.println("La gira era null");
-            this.gira = null;
-        }
+        this.gira = gira;
     }
 
     public Informe(long id, String descripcion, Gira gira) {
@@ -76,14 +70,6 @@ public class Informe {
             System.out.println("La descripcion no es correcta" + ex.getMessage());
             this.descripcion = "";
         }
-
-        try {
-            InformeException.validaGira(gira);
-            this.gira = gira;
-        } catch (InformeException ex) {
-            System.out.println("La gira era null");
-            this.gira = null;
-        }
     }
 
     public Informe(Informe i) {
@@ -95,14 +81,6 @@ public class Informe {
         } catch (InformeException ex) {
             System.out.println("La descripcion no es correcta" + ex.getMessage());
             this.descripcion = "";
-        }
-
-        try {
-            InformeException.validaGira(gira);
-            this.gira = i.getGira();
-        } catch (InformeException ex) {
-            System.out.println("La gira era null");
-            this.gira = null;
         }
     }
 
@@ -162,13 +140,6 @@ public class Informe {
             System.out.println("Introduzca el nombre de la gira");
             String nombreGira = in.nextLine();
             Gira g = BaseDatos.buscaGiraByNombre(nombreGira);
-            try {
-                InformeException.validaGira(g);
-                informe.setGira(g);
-            } catch (InformeException ex) {
-                informe.setGira(null);
-            }
-
             confirmacion = ToolBox.readBoolean();
         } while (confirmacion != true);
         in.close();
