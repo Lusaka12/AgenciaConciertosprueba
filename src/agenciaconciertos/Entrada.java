@@ -17,6 +17,8 @@ public class Entrada {
     private double precio; // precio de la entrada | valores validos un numero real o entero mayor que 0
     private boolean esVIP;//atributo que indica si el usuario es vip o no | valores validos true cuando si es vip o false cuando no lo es
     private Concierto concierto; //atributo que indica el concierto al que pertenece la entrada
+    private Reserva reserva; //atributo que indica la reserva a la que pertenece la entrada.
+    private boolean disponible; //atributo que indica si la entrada esta disponible para su compra.
     
     public long getId() {
         return id;
@@ -24,6 +26,22 @@ public class Entrada {
 
     public double getPrecio() {
         return precio;
+    }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
+
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
     }
 
     public boolean getEsVIP() {
@@ -62,6 +80,8 @@ public class Entrada {
         this.precio = e.getPrecio();
         this.esVIP = e.getEsVIP();
         this.concierto = e.getConcierto();
+        this.reserva= e.getReserva();
+        this.disponible= e.isDisponible();
     }
      
     public Entrada(){
@@ -74,7 +94,7 @@ public class Entrada {
     }
     public String data() {
        
-        return this.getId()+"|"+this.getPrecio()+"|"+this.getEsVIP();
+        return this.getId()+"|"+this.getPrecio()+"|"+this.getEsVIP()+"|"+this.getConcierto()+"|"+this.getReserva()+"|"+this.isDisponible();
     }
     
     public Entrada getEntradaById(long id){

@@ -15,14 +15,32 @@ import java.util.Scanner;
  * @version 1.01
  */
 public class Compra {
-    private int numEntradas;//numero de entradas de la compra | valores validos hasta el maximo numero de entradas del concierto.
     protected long id;//atributo que sirve para identificar a la compra |  valores validos numero entero mayor que 0
+    private int numEntradas;//numero de entradas de la compra | valores validos hasta el maximo numero de entradas del concierto.
     private double precioTotal;//precio que se pagara , se calculara a partir del precio de la entrada y numEntradas de la compra
     //valores validos de precio un numero entero o real mayor que 0
     private String metodoPago;//atributo que guarda el metodo de pago | valores validos podran ser en efectivo y con tarjeta
     private  long idDescuento;
     private Date fechaCompra;
-    private Usuario usuarioCompra;
+    //private Usuario usuarioCompra;
+    private Usuario idUsuario;
+    private long idEntrada;
+
+    public Usuario getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Usuario idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public long getIdEntrada() {
+        return idEntrada;
+    }
+
+    public void setIdEntrada(long idEntrada) {
+        this.idEntrada = idEntrada;
+    }
     
     public int getNumEntradas() {
         return numEntradas;
@@ -79,13 +97,17 @@ public class Compra {
         this.numEntradas = numEntradas;
         this.precioTotal = precioTotal;
         this.metodoPago = metodoPago;
-        this.usuarioCompra=usuarioCompra;
+       // this.usuarioCompra=usuarioCompra;
        
     }
     public Compra(Compra c) {
         this.numEntradas = c.getNumEntradas();
         this.precioTotal = c.getPrecioTotal();
         this.metodoPago = c.getMetodoPago();
+        this.idDescuento = c.getIdDescuento();
+        this.fechaCompra = c.getFechaCompra();
+        this.idUsuario = c.getIdUsuario();
+        this.idEntrada = c.getIdEntrada();
     }
     public Compra() {
     }
@@ -96,8 +118,8 @@ public class Compra {
     }
     
     public String data() {
-        return this.getId()+"|"+this.getNumEntradas()+"|"+
-                this.getPrecioTotal() +"|"+this.getMetodoPago();
+        return this.getId()+"|"+this.getNumEntradas()+"|"+this.getPrecioTotal() +"|"+this.getMetodoPago()+"|"+this.getIdDescuento()+"|"+this.getFechaCompra()+"|"+this.getIdUsuario()+"|"+this.getIdEntrada();
+               
     }
     
     public Compra getCompraById (long id){
