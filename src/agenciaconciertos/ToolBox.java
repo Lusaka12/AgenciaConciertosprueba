@@ -7,6 +7,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 /**
  * clase que contiene  metodos utiles para otras clases
@@ -37,5 +38,21 @@ public class ToolBox {
                 return confirmacion=='s';
             }
         }while(true);
+    }
+    
+    public static ArrayList<String> separaPorCampos(String linea){
+        ArrayList<String> listaAtributos=new ArrayList<>();
+        String atributo = "";
+        char caracter;
+        for(int i =0 ;i<linea.length();i++){
+            caracter=linea.charAt(i);
+            if(caracter!='|'){
+                atributo+=caracter;
+            }else{
+                listaAtributos.add(atributo);
+                atributo="";
+            }
+        }
+        return listaAtributos;
     }
 }

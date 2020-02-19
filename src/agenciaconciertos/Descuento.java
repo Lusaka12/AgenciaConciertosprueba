@@ -4,16 +4,32 @@
  * and open the template in the editor.
  */
 package agenciaconciertos;
-import java.util.Date;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author DAW113
  * @version 1.01
  */
-public class Descuento {
+public class Descuento implements Serializable {
     protected long id;
     private String codigoDescuento; // identificar el código de descuento // valores validos cadena de caracteres de 20 caracteres no pudiendo tener simbolos y numeros
     public Date fechaValidez; // Cuando va a caducar el codigo descuento // valores validos cadena de caracteres de 20 caracteres no pudiendo tener simbolos y numeros
@@ -64,6 +80,13 @@ public class Descuento {
     public Descuento() {
     }
     
+    private Descuento(long id, String codigoDescuento, Date fechaValidez, double cantidadDescontada) {
+        this.id = id;
+        this.codigoDescuento = codigoDescuento;
+        this.fechaValidez = fechaValidez;
+        this.cantidadDescontada = cantidadDescontada;
+    }
+    
     @Override
     public String toString() {
         return "Descuento{" + "codigoDescuento=" + codigoDescuento + ", fechaValidez=" + fechaValidez + ", cantidadDescontada=" + cantidadDescontada + '}';
@@ -107,6 +130,142 @@ public class Descuento {
         } while (!confirmacion);
         return descuento;
     } 
+    
+        public void exportaDescuentoCaracteres(String rutaFichero) {
+        FileWriter escritura = null;
+        BufferedWriter bW = null;
+        try {
+            escritura = new FileWriter(rutaFichero, true);
+            bW = new BufferedWriter(escritura);
+            bW.write(data()+"\n");
+            bW.flush();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Descuento.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+
+            if (bW != null) {
+                try {
+                    bW.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Descuento.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (escritura != null) {
+                try {
+                    escritura.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Descuento.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    public static ArrayList<Descuento> importaDescuentoCaracter(String rutaFichero) {
+        ArrayList<Descuento> listaDescuentos = new ArrayList<Descuento>();
+        FileReader fR = null;
+        BufferedReader bR = null;
+        try {
+
+            fR = new FileReader(rutaFichero);
+            bR = new BufferedReader(fR);
+            String lineaActual = "";
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            while ((lineaActual = bR.readLine()) != null) {
+                ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
+                Descuento des= new Descuento(Long.parseLong(atributos.get(0)), atributos.get(1), df.parse(atributos.get(2)),  Double.parseDouble(atributos.get(3)));
+                listaDescuentos.add(des);
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("fichero no encontrado");
+        } catch (IOException ex) {
+            Logger.getLogger(Descuento.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (fR != null) {
+                try {
+                    fR.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Descuento.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (bR != null) {
+                try {
+                    bR.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Descuento.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            return listaDescuentos;
+        }
+    }
+
+    public void exportaDescuentoBinario(String rutaFichero) {
+        FileOutputStream fOS = null;
+        ObjectOutputStream escribeObjeto = null;
+        try {
+            fOS = new FileOutputStream(rutaFichero);
+            escribeObjeto = new ObjectOutputStream(fOS);
+            escribeObjeto.writeObject(this);
+        } catch (FileNotFoundException ex) {
+            System.out.println("No se ha encontrado el fichero");
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } finally {
+            if (fOS != null) {
+                try {
+                    fOS.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (escribeObjeto != null) {
+                try {
+                    escribeObjeto.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public static ArrayList<Descuento> importaDescuentoBinario(String rutaFichero) {
+        ArrayList<Descuento> listaDescuentos = new ArrayList<>();
+        FileInputStream fIS = null;
+        ObjectInputStream oIS = null;
+        Descuento des;
+        try {
+            fIS = new FileInputStream(rutaFichero);
+            oIS = new ObjectInputStream(fIS);
+            while ((des= (Descuento) oIS.readObject()) != null) {
+                listaDescuentos.add(des);
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("FileNotFoundException: " + ex.getMessage());
+        } catch (EOFException ex) {
+           // System.out.println("FileNotFoundException: " + ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ClassNotFoundException: " + ex.getMessage());
+        } finally {
+            if (fIS != null) {
+                try {
+                    fIS.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Descuento.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (oIS != null) {
+                try {
+                    oIS.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Descuento.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }
+        return listaDescuentos;
+    }
 }
         
   
