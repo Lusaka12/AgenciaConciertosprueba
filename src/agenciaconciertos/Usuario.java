@@ -5,6 +5,17 @@
  */
 package agenciaconciertos;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -103,7 +114,14 @@ public class Usuario {
         this.reserva = reserva;
     }
     
-    
+     private Usuario(long id,String NIF,String nombre, String apellidos, String email, boolean verificado) {
+        this.id=id;
+        this.email=email;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.NIF = NIF;
+        this.verificado = verificado;
+    }
     @Override
     public String toString() {
         return "Usuario{" + "nombre=" + nombre + ", apellidos=" + apellidos + ", email=" + email + ", NIF=" + NIF + ", verificado=" + verificado + '}';
@@ -111,8 +129,8 @@ public class Usuario {
     
     public String data() {
         
-        return this.getId()+"|"+this.getNombre()+"|" + this.getApellidos() + "|"+this.getEmail()
-             + "|" + this.getNIF() +"|"+this.getVerificado();
+        return this.getId()+"|"+ this.getNIF()+"|"+this.getNombre()+"|" + this.getApellidos() + "|"+this.getEmail()
+               +"|"+this.getVerificado();
     }
     public Usuario getUsuarioById (long id){
         /*for (Usuario usuario : listaUsuarios) {
@@ -149,5 +167,139 @@ public class Usuario {
         }while (confirmacion!=true);
         in.close();
         return usuario;
+    }
+    public void exportaReporteroCaracteres(String rutaFichero) {
+        FileWriter escritura = null;
+        BufferedWriter bW = null;
+        try {
+            escritura = new FileWriter(rutaFichero, true);
+            bW = new BufferedWriter(escritura);
+            bW.write(data()+"\n");
+            bW.flush();
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } finally {
+
+            if (bW != null) {
+                try {
+                    bW.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (escritura != null) {
+                try {
+                    escritura.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public static ArrayList<Usuario> importaUsuarioCaracter(String rutaFichero) {
+        ArrayList<Usuario> listaUsuario = new ArrayList<Usuario>();
+        FileReader fR = null;
+        BufferedReader bR = null;
+        try {
+
+            fR = new FileReader(rutaFichero);
+            bR = new BufferedReader(fR);
+            String lineaActual = "";
+            while ((lineaActual = bR.readLine()) != null) {
+                ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
+                Usuario usu = new Usuario(Long.parseLong(atributos.get(0)),atributos.get(1),atributos.get(2),atributos.get(3)
+                        ,atributos.get(4),Boolean.valueOf(atributos.get(5)));
+                listaUsuario.add(usu);
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("fichero no encontrado");
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } finally {
+            if (fR != null) {
+                try {
+                    fR.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (bR != null) {
+                try {
+                    bR.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            return listaUsuario;
+        }
+    }
+
+    public void exportaUsuarioBinario(String rutaFichero) {
+        FileOutputStream fOS = null;
+        ObjectOutputStream escribeObjeto = null;
+        try {
+            fOS = new FileOutputStream(rutaFichero);
+            escribeObjeto = new ObjectOutputStream(fOS);
+            escribeObjeto.writeObject(this);
+        } catch (FileNotFoundException ex) {
+            System.out.println("No se ha encontrado el fichero");
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } finally {
+            if (fOS != null) {
+                try {
+                    fOS.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (escribeObjeto != null) {
+                try {
+                    escribeObjeto.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public static ArrayList<Usuario> importaUsuarioBinario(String rutaFichero) {
+        ArrayList<Usuario> listaUsuarios = new ArrayList<>();
+        FileInputStream fIS = null;
+        ObjectInputStream oIS = null;
+        Usuario usu;
+        try {
+            fIS = new FileInputStream(rutaFichero);
+            oIS = new ObjectInputStream(fIS);
+            while ((usu = (Usuario) oIS.readObject()) != null) {
+                listaUsuarios.add(usu);
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("FileNotFoundException: " + ex.getMessage());
+        } catch (EOFException ex) {
+           // System.out.println("FileNotFoundException: " + ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ClassNotFoundException: " + ex.getMessage());
+        } finally {
+            if (fIS != null) {
+                try {
+                    fIS.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (oIS != null) {
+                try {
+                    oIS.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+
+        }
+        return listaUsuarios;
     }
 }

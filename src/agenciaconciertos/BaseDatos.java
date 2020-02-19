@@ -23,18 +23,19 @@ public class BaseDatos {
                     new Reportero("reportero2", "apellido2", "1234b", "123456799"),
                     new Reportero("reportero3", "apellido3", "1234c", "123456899")
             ));
+    
     public static ArrayList<Actuacion> baseActuaciones = new ArrayList<Actuacion>(
             Arrays.asList(
-                    new Actuacion(0, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"), new Artista("Artista2", "electronica"))), 0),
-                    new Actuacion(1, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 0),
-                    new Actuacion(2, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 0),
-                    new Actuacion(3, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 0),
-                    new Actuacion(4, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 0),
-                    new Actuacion(5, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 1),
-                    new Actuacion(6, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 1),
-                    new Actuacion(7, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 1),
-                    new Actuacion(8, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 1),
-                    new Actuacion(9, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))), 1)
+                    new Actuacion(0, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"), new Artista("Artista2", "electronica")))),
+                    new Actuacion(1, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock")))),
+                    new Actuacion(2, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock")))),
+                    new Actuacion(3, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock")))),
+                    new Actuacion(4, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock")))),
+                    new Actuacion(5, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock")))),
+                    new Actuacion(6, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock")))),
+                    new Actuacion(7, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock")))),
+                    new Actuacion(8, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock")))),
+                    new Actuacion(9, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))))
             )
     );
     // el constructor de tipo date esta marcada como @Deprecated es decir en desuso

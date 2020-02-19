@@ -5,6 +5,17 @@
  */
 package agenciaconciertos;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -89,7 +100,13 @@ public class Reportero {
         this.nif = nif;
         this.numero = numero;
     }
-
+    private Reportero(long id,String nombre, String apellidos, String nif, String numero) {
+        this.id=id;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.nif = nif;
+        this.numero = numero;
+    }
     public Reportero(Reportero reportero) {
         this.nombre = reportero.getNombre();
         this.apellidos = reportero.getApellidos();
@@ -153,5 +170,138 @@ public class Reportero {
         in.close();
         return reportero;
     }
-    
+    public void exportaReporteroCaracteres(String rutaFichero) {
+        FileWriter escritura = null;
+        BufferedWriter bW = null;
+        try {
+            escritura = new FileWriter(rutaFichero, true);
+            bW = new BufferedWriter(escritura);
+            bW.write(data()+"\n");
+            bW.flush();
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } finally {
+
+            if (bW != null) {
+                try {
+                    bW.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (escritura != null) {
+                try {
+                    escritura.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public static ArrayList<Reportero> importaReporteroCaracter(String rutaFichero) {
+            ArrayList<Reportero> listaReportero = new ArrayList<Reportero>();
+        FileReader fR = null;
+        BufferedReader bR = null;
+        try {
+
+            fR = new FileReader(rutaFichero);
+            bR = new BufferedReader(fR);
+            String lineaActual = "";
+            while ((lineaActual = bR.readLine()) != null) {
+                ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
+                Reportero repo = new Reportero(Long.parseLong(atributos.get(0)),atributos.get(1),atributos.get(2),
+                        atributos.get(3),atributos.get(4));
+                listaReportero.add(repo);
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("fichero no encontrado");
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } finally {
+            if (fR != null) {
+                try {
+                    fR.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (bR != null) {
+                try {
+                    bR.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            return listaReportero;
+        }
+    }
+
+    public void exportaReporteroBinario(String rutaFichero) {
+        FileOutputStream fOS = null;
+        ObjectOutputStream escribeObjeto = null;
+        try {
+            fOS = new FileOutputStream(rutaFichero);
+            escribeObjeto = new ObjectOutputStream(fOS);
+            escribeObjeto.writeObject(this);
+        } catch (FileNotFoundException ex) {
+            System.out.println("No se ha encontrado el fichero");
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } finally {
+            if (fOS != null) {
+                try {
+                    fOS.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (escribeObjeto != null) {
+                try {
+                    escribeObjeto.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public static ArrayList<Reportero> importaReporteroBinario(String rutaFichero) {
+        ArrayList<Reportero> listaReporteros = new ArrayList<>();
+        FileInputStream fIS = null;
+        ObjectInputStream oIS = null;
+        Reportero repo;
+        try {
+            fIS = new FileInputStream(rutaFichero);
+            oIS = new ObjectInputStream(fIS);
+            while ((repo = (Reportero) oIS.readObject()) != null) {
+                listaReporteros.add(repo);
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("FileNotFoundException: " + ex.getMessage());
+        } catch (EOFException ex) {
+           // System.out.println("FileNotFoundException: " + ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ClassNotFoundException: " + ex.getMessage());
+        } finally {
+            if (fIS != null) {
+                try {
+                    fIS.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+            if (oIS != null) {
+                try {
+                    oIS.close();
+                } catch (IOException ex) {
+                    System.out.println("IOException: " + ex.getMessage());
+                }
+            }
+
+        }
+        return listaReporteros;
+    }
 }
