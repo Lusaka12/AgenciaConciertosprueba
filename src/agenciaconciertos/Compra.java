@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import java.util.logging.Logger;
  * @see Entrada
  * @see Reserva
  */
-public class Compra {
+public class Compra implements Serializable{
 
     protected long id;//atributo que sirve para identificar a la compra |  valores validos numero entero mayor que 0
     private int numEntradas;//numero de entradas de la compra | valores validos hasta el maximo numero de entradas del concierto.
@@ -239,14 +240,20 @@ public class Compra {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
-                Compra com = new Compra(Long.parseLong(atributos.get(0)), Integer.parseInt(atributos.get(1)), Double.parseDouble(atributos.get(2)), atributos.get(3), Long.parseLong(atributos.get(4)), df.parse(atributos.get(5)), Long.parseLong(atributos.get(6)), Long.parseLong(atributos.get(7)));
+                long id = Long.parseLong(atributos.get(0));
+                int nentradas = Integer.parseInt(atributos.get(1));
+                double precioTotal = Double.parseDouble(atributos.get(2));
+                String metodoPago = atributos.get(3);
+                long iddesc = Long.parseLong(atributos.get(4));
+                Date fecha = df.parse(atributos.get(5));
+                Compra com = new Compra(id, nentradas, precioTotal , metodoPago, iddesc, fecha, Long.parseLong(atributos.get(6)), Long.parseLong(atributos.get(7)));
                 listaCompras.add(com);
             }
         } catch (FileNotFoundException ex) {
             System.out.println("fichero no encontrado");
-        } catch (ParseException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Compra.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (IOException ex) {
+        } catch (ParseException ex) {
             Logger.getLogger(Compra.class.getName()).log(Level.SEVERE, null, ex);
         }  finally {
             if (fR != null) {
