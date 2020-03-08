@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author DAW102
- * @version 1.01
+ * @version 1.00
  */
 public class Artista implements Serializable {
 
@@ -57,52 +57,79 @@ public class Artista implements Serializable {
     public void setGeneroMusica(String generoMusica) {
         this.generoMusica = generoMusica;
     }
-
+    /**
+     * metodo contructor de la clase Artista
+     * @param nombreArtistico el nombre artistisco del artista
+     * @param generoMusica el genero de musica del artsta
+     */
     public Artista(String nombreArtistico, String generoMusica) {
         this.nombreArtistico = nombreArtistico;
         this.generoMusica = generoMusica;
     }
-    
+    /**
+     * metodo constructor privado que es utilizado en la recuperacion de objetos de uin fichero de caracteres.
+     * @param id el id del artista
+     * @param nombreArtistico el nombre artistisco del artista
+     * @param generoMusica el genero de musica del artsta
+     */
     private Artista (long id, String nombreArtistico, String generoMusica) {
         this.id = id;
         this.nombreArtistico = nombreArtistico;
         this.generoMusica = generoMusica;
     }
+    /**
+     * metodo constructor que copia una instancia
+     * @param a la instacia a copiar
+     */
      public Artista(Artista a) {
         this.nombreArtistico = a.getNombreArtistico();
         this.generoMusica = a.getGeneroMusica();
     }
+    /**
+     * metodo constructor por defecto
+     */
     public Artista(){
        
     }
-
     @Override
     public String toString() {
         return "Artista{" + "identificador=" + id + ", nombreArtistico=" + nombreArtistico + ", generoMusica=" + generoMusica + '}';
     }
-    
+    /**
+     * 
+     * metodo que devuelve un string con los datos de momentos serados por | con el siguiente formato.
+     *                      id|nombreArtistico|generoMusica
+     * @return un string con los datos de la clase y el siguiente formato id|nombreArtistico|generoMusica
+     */
+     
     public String data() { 
         return this.getId()+"|"+this.getNombreArtistico()+"|"+this.getGeneroMusica();
-    }
+    }/*
     public Artista getArtistaById (long id){
-      /*
+      
         for(Artista artista:listaArtista){
             if(artista.getId()==id){
                 return artista;
             }
         }
-        */
+        
         return null;
-    }
+    }*/
+    /*
     public  ArrayList<Artista> getAllArtista (){
         ArrayList<Artista> nuevaLista=new ArrayList<Artista>();
-        /*for(Artista artista:listaArtista){
+        for(Artista artista:listaArtista){
             if(artista.getId()==id){
                 nuevaLista.add(artista);
             }
-        }*/
+        }
         return nuevaLista;
     }
+    */
+    /**
+     * metodo que permite crear un Artista mediante el teclado
+     * @return devuelve el Artista creado por teclado.
+     */
     public static Artista nuevoArtista() { 
         Artista artista=new Artista();
         Scanner in=new Scanner(System.in);
@@ -117,7 +144,10 @@ public class Artista implements Serializable {
         in.close();
         return artista; 
     }
-    
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaArtistaCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -147,7 +177,11 @@ public class Artista implements Serializable {
             }
         }
     }
-
+    /**
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los artistas guardados en el fichero
+     */
     public static ArrayList<Artista> importaArtistaCaracter(String rutaFichero) {
         ArrayList<Artista> listaArtistas = new ArrayList<Artista>();
         FileReader fR = null;
@@ -157,9 +191,15 @@ public class Artista implements Serializable {
             fR = new FileReader(rutaFichero);
             bR = new BufferedReader(fR);
             String lineaActual = "";
+            long id;
+            String nombreArtistico; 
+            String generoMusica;
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
-                Artista art = new Artista(Long.parseLong(atributos.get(0)), atributos.get(1), atributos.get(2));
+                id=Long.parseLong(atributos.get(0));
+                nombreArtistico=atributos.get(1);
+                generoMusica=atributos.get(2);
+                Artista art = new Artista(id,nombreArtistico ,generoMusica );
                 listaArtistas.add(art);
             }
         } catch (FileNotFoundException ex) {
@@ -184,7 +224,10 @@ public class Artista implements Serializable {
             return listaArtistas;
         }
     }
-
+     /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaArtistaBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -213,7 +256,11 @@ public class Artista implements Serializable {
             }
         }
     }
-
+    /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<Artista> importaArtistaBinario(String rutaFichero) {
         ArrayList<Artista> listaArtistas = new ArrayList<>();
         FileInputStream fIS = null;

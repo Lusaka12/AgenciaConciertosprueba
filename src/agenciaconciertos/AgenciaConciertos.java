@@ -63,7 +63,7 @@ public class AgenciaConciertos {
                 case 2:
                     System.out.println("Introduzca el nombre de la gira");
                     String nomGira = in.nextLine();
-                    Informe informe = BaseDatos.buscaInformeByNomGira(nomGira);
+                    Informe informe = BaseDatos.buscaGiraByNombre(nomGira).getInforme();
                     if (informe != null) {
                             if (informe.revisarInforme()) {
                                     System.out.println("Revision del informe satisfactoria.");
@@ -73,11 +73,7 @@ public class AgenciaConciertos {
                     }
                     break;
                 case 3:
-                    try {
-                        Reportero reportero = Reportero.nuevoReportero();
-                    } catch (ReporteroException rE) {
-                        System.out.println(rE.getMessage());
-                    }
+                    Reportero reportero = Reportero.nuevoReportero();
                     break;
                 case 4:
                     break;

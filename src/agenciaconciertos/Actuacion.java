@@ -17,12 +17,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
  *
- * @author DAW113
- * @version 1.01
+ * @author DAW113,DAW102
+ * @version 1.00
  */
 public class Actuacion {
 
@@ -32,10 +33,11 @@ public class Actuacion {
     private ArrayList<Artista> listaArtistas;//lista de artistas que actuan en la actuacion// valores permitidos minimo 1 y maximo 2
     private long idConcierto;// guarda el concierto de la actuacion
     private Reportero reportero = null;// Guarda el reportero que cubre esa actuacion.//valores validos un objeto reportero cuando se le asigne un reportero y antes de eso null
-    private long idArtista;
+    private ArrayList<Long> idArtistas=new ArrayList<>();
     private long idReportero;
 
-
+    //metodos getters y setters
+    
     public Reportero getReportero() {
         return reportero;
     }
@@ -43,7 +45,7 @@ public class Actuacion {
     public void setReportero(Reportero reportero) {
         this.reportero = reportero;
     }
-
+ 
     public long getId() {
         return id;
     }
@@ -84,13 +86,51 @@ public class Actuacion {
         this.duracion = duracion;
     }
 
-    public Actuacion(int numeroSecuencia, int duracion, ArrayList<Artista> listaArtistas, long idConcierto) {
-        this.numeroSecuencia = numeroSecuencia;
-        this.duracion = duracion;
-        this.listaArtistas = listaArtistas;
+    public long getIdConcierto() {
+        return idConcierto;
+    }
+
+    public void setIdConcierto(long idConcierto) {
         this.idConcierto = idConcierto;
     }
 
+    public ArrayList<Long> getIdArtistas() {
+        return idArtistas;
+    }
+
+    public void setIdArtistas(ArrayList<Long> idArtistas) {
+        this.idArtistas = idArtistas;
+    }
+
+    public long getIdReportero() {
+        return idReportero;
+    }
+
+    public void setIdReportero(long idReportero) {
+        this.idReportero = idReportero;
+    }
+    
+    /**
+     * metodo constructor de la clase actuacion
+     * @param numeroSecuencia el numero de secuencia de la actuacion
+     * @param duracion la duracion de la actuacion
+     * @param idArtistas la lista de artistas que participan en la actuacion
+     * @param idConcierto  el concierto de la actucion
+     */
+    public Actuacion(int numeroSecuencia, int duracion, long idConcierto,ArrayList<Long> idArtistas,long idReportero) {
+        this.numeroSecuencia = numeroSecuencia;
+        this.duracion = duracion;
+        this.idConcierto = idConcierto;
+        this.idArtistas=idArtistas;
+        this.idReportero=idReportero;
+    }
+    /**
+     * metodo que se utiliza en la clase baseDatos para la generacion de actuaciones.
+     * @param id el id de la actuacion
+     * @param numeroSecuencia el numero de la secuencien de la actuacion
+     * @param duracion la duracion de la actuacion en minutos
+     * @param listaArtistas los artitas que participan en la actuacion
+     */
     public Actuacion(long id, int numeroSecuencia, int duracion, ArrayList<Artista> listaArtistas) {
         this.id = id;
         this.numeroSecuencia = numeroSecuencia;
@@ -100,60 +140,73 @@ public class Actuacion {
 
     /**
      * metodo constructor que usaran los metodos para recuperar los objetos.
-     *
-     * @param id
-     * @param numeroSecuencia
-     * @param duracion
-     * @param idArtista
-     * @param idConcierto
+     * @param id el id de la actuacion
+     * @param numeroSecuencia el numero de la secuencia de la actuacion
+     * @param duracion la duracion en minutos 
+     * @param idArtistas la lista de id de los artistas
+     * @param idReportero el id del reportero
+     * @param idConcierto el id del concierto
      */
-    private Actuacion(long id, long idArtista, long idReportero, long idConcierto, int numeroSecuencia, int duracion) {
+    private Actuacion(long id, int numeroSecuencia, int duracion,ArrayList<Long> idArtistas, long idReportero, long idConcierto) {
         this.id = id;
         this.numeroSecuencia = numeroSecuencia;
         this.duracion = duracion;
-        this.idArtista = idArtista;
+        this.idArtistas = idArtistas;
         this.idConcierto = idConcierto;
         this.idReportero = idReportero;
     }
-
+    /**
+     * metodo de copia de la clase Actuacion.
+     * @param a la actuacion a copiar.
+     */
     public Actuacion(Actuacion a) {
         this.numeroSecuencia = a.getNumeroSecuencia();
         this.duracion = a.getDuracion();
         this.listaArtistas = a.getListaArtistas();
+        this.idArtistas=a.getIdArtistas();
         this.idConcierto = a.getIdconcierto();
+        this.idReportero=a.getIdReportero();
     }
-
+    /**
+     * constructor por defecto
+     */
     public Actuacion() {
-        listaArtistas = new ArrayList<Artista>();
     }
 
     @Override
     public String toString() {
         return "Actuacion{" + "identificador=" + id + ", numeroSecuencia=" + numeroSecuencia + ", duracion=" + duracion + '}';
     }
-
+     /**
+     * metodo que devuelve un string con los datos de momentos serados por | con el siguiente formato.
+     *                      id|numeroSecuencia|duracion|idartistas|idReportero|idConcierto 
+     * @return un string con los datos de la clase y el siguiente formato id|numeroSecuencia|duracion|idartistas|idReportero|idConcierto 
+     */
     public String data() {
-        return this.getId() + "|" + this.idArtista + "|" + this.idReportero + "|" + this.idConcierto + "|" + this.getNumeroSecuencia() + "|" + this.getDuracion();
+        return this.getId() + "|"+this.getNumeroSecuencia()+"|"+ this.getDuracion()+"|"+ this.getIdArtistas() + "|" + this.getIdReportero()+ "|" + this.getIdConcierto();
     }
-
+    /*
     public Actuacion getActuacionById(long id) {
-        /*for (Actuacion actuacion : listaActuaciones) {
+        for (Actuacion actuacion : listaActuaciones) {
             if (actuacion.getId() == id) {
                 return actuacion;
             }
-        }*/
+        }
         return null;
-    }
-
+    }*/
+    /*
     public ArrayList<Actuacion> getAllActuacion() {
         ArrayList<Actuacion> nuevaListaActuacion = new ArrayList<Actuacion>();
-        /*for(Actuacion actuacion:listaActuaciones) {
+        for(Actuacion actuacion:listaActuaciones) {
             nuevaListaDescuentos.add(descuento);
         } 
-         */
+        
         return nuevaListaActuacion;
-    }
-
+    } */
+    /**
+     * metodo que permite crear un actuacion mediante el teclado
+     * @return devuelve el actuacion creado por teclado.
+     */
     public static Actuacion nuevaActuacion() {
         Actuacion actuacion = new Actuacion();
         Scanner in = new Scanner(System.in);
@@ -172,8 +225,8 @@ public class Actuacion {
         return actuacion;
     }
 
-    /* Metodo que Asigna el reportero a esta actuacion.
-     
+    /**
+     * Metodo que Asigna el reportero a esta actuacion.
      */
     public void asignaReporteroActuacion() { //throws formatoNifIncorrecto,reporteroNoExiste
         if (reportero != null) {
@@ -199,7 +252,10 @@ public class Actuacion {
         }
         reportero = rep;
     }
-
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaActuacionCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -229,7 +285,11 @@ public class Actuacion {
             }
         }
     }
-
+    /**
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los reportero guardados en el fichero
+     */
     public static ArrayList<Actuacion> importaActuacionCaracter(String rutaFichero) {
         ArrayList<Actuacion> listaActuaciones = new ArrayList<Actuacion>();
         FileReader fR = null;
@@ -239,10 +299,28 @@ public class Actuacion {
             fR = new FileReader(rutaFichero);
             bR = new BufferedReader(fR);
             String lineaActual = "";
+            long id;
+            int numeroSecuencia; 
+            int duracion;
+            ArrayList<Long> idArtistas;
+            long idReportero;
+            long idConcierto;
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
-                Actuacion act = new Actuacion(Long.parseLong(atributos.get(0)), Long.parseLong(atributos.get(1)), Long.parseLong(atributos.get(2)), Long.parseLong(atributos.get(3)),
-                        Integer.parseInt(atributos.get(4)), Integer.parseInt(atributos.get(5)));
+                id=Long.parseLong(atributos.get(0));
+                numeroSecuencia=Integer.parseInt(atributos.get(1));
+                duracion=Integer.parseInt(atributos.get(2));
+                //para meter una lista de idartistas separados por ","  
+                String[] listaIdArtistas=atributos.get(3).split(",");
+                // creo una nueva lista vacia a cada iteracion
+                idArtistas=new ArrayList<>();
+                //recorro la lista de String y la convierto en Long.
+                for(String idArtista:listaIdArtistas){     
+                    idArtistas.add(Long.parseLong(idArtista));
+                }
+                idReportero=Long.parseLong(atributos.get(4));
+                idConcierto=Long.parseLong(atributos.get(5));
+                Actuacion act = new Actuacion(id,numeroSecuencia,duracion ,idArtistas,idReportero,idConcierto );
                 listaActuaciones.add(act);
             }
         } catch (FileNotFoundException ex) {
@@ -267,7 +345,10 @@ public class Actuacion {
             return listaActuaciones;
         }
     }
-
+    /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaActuacionBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -296,7 +377,11 @@ public class Actuacion {
             }
         }
     }
-
+    /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<Actuacion> importaActuacionBinario(String rutaFichero) {
         ArrayList<Actuacion> listaActuaciones = new ArrayList<>();
         FileInputStream fIS = null;

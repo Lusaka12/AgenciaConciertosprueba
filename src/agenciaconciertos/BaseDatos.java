@@ -16,14 +16,15 @@ import java.util.Date;
  */
 public class BaseDatos {
 
-    // como previsiblemente se puedan añadir nuevos reporteros usamos un ArrayList
+    //para simular la posibilidad de añadir nuevos elementos a la lista se opto por el arraylist.
+    //ArrayList que almacena los reporteros   
     public static ArrayList<Reportero> baseReporteros = new ArrayList<Reportero>(
             Arrays.asList(
                     new Reportero("reportero1", "apellido1", "1234a", "123456789"),
                     new Reportero("reportero2", "apellido2", "1234b", "123456799"),
                     new Reportero("reportero3", "apellido3", "1234c", "123456899")
             ));
-    
+    //ArrayList que alamcena las actuaciones
     public static ArrayList<Actuacion> baseActuaciones = new ArrayList<Actuacion>(
             Arrays.asList(
                     new Actuacion(0, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"), new Artista("Artista2", "electronica")))),
@@ -38,7 +39,8 @@ public class BaseDatos {
                     new Actuacion(9, 1, 20, new ArrayList<Artista>(Arrays.asList(new Artista("Artista1", "rock"))))
             )
     );
-    // el constructor de tipo date esta marcada como @Deprecated es decir en desuso
+    // el constructor de tipo date esta marcada como @Deprecated es decir en desuso o obseleta.
+    //ArrayList que almacena las giras    
     public static ArrayList<Gira> baseGiras = new ArrayList<Gira>(
             Arrays.asList(
                     new Gira(0, new Date(2020, 10, 1), new Date(2020, 10, 7), "giraNorte", new ArrayList<Concierto>(Arrays.asList(
@@ -51,7 +53,7 @@ public class BaseDatos {
                     new Gira(1, new Date(2020, 10, 1), new Date(2020, 10, 7), "giraSur", new ArrayList<Concierto>()),
                     new Gira(2, new Date(2020, 10, 1), new Date(2020, 10, 7), "giraEste", new ArrayList<Concierto>()))
     );
-
+    //ArrayList que almacena los
     public static ArrayList<Informe> baseInformes = new ArrayList<Informe>(
             Arrays.asList(
                     new Informe(0, "bien", baseGiras.get(0)),
@@ -60,7 +62,11 @@ public class BaseDatos {
                     new Informe(3, "muy mal", baseGiras.get(0)),
                     new Informe(4, "bien", baseGiras.get(0))
             ));
-
+    /**
+     * metodo que devuelve un reportero  para ello busca por nif en la lista de reportero
+     * @param NIF el nif del reportero que queremos encontar 
+     * @return el reportero que queremos encontar o null en caso de que no lo encuentre
+     */
     public static Reportero buscaReporteroByNIF(String NIF) {
         for (int i = 0; i < baseReporteros.size(); i++) {
             Reportero rep = baseReporteros.get(i);
@@ -71,7 +77,11 @@ public class BaseDatos {
         //throw new ReporteroNoEncontrado;
         return null;
     }
-
+    /**
+     * metodo que devuelve una gira para ello busca por el nombre de la gira en la lista de giras
+     * @param nombre el nombre de la gira que queremos encontar 
+     * @return la gira que queremos encontar o null en caso de que no la encuentre
+     */
     public static Gira buscaGiraByNombre(String nombre) {
         for (int i = 0; i < baseGiras.size(); i++) {
             Gira gira = baseGiras.get(i);
@@ -82,7 +92,9 @@ public class BaseDatos {
         //throw new GiraNoEncontrada;
         return null;
     }
-
+   
+ 
+    /*
     public static Informe buscaInformeByGira(Gira g) {
         for (int i = 0; i < baseInformes.size(); i++) {
             Informe informe = baseInformes.get(i);
@@ -91,16 +103,18 @@ public class BaseDatos {
             }
         }
         return null;
-    }
-
-    public static Informe buscaInformeByNomGira(String in) {
+    }*/
+    
+    
+    /*
+    public static Informe buscaInformeByNomGira(String nombre) {
         for (int i = 0; i < baseInformes.size(); i++) {
             Informe informe = baseInformes.get(i);
-            if (informe.getGira().getNombre().equals(in)) {
+            if (informe.getGira().getNombre().equals(nombre)) {
                 return informe;
             }
         }
         return null;
     }
-
+    */
 }

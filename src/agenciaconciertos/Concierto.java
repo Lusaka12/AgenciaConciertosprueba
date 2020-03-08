@@ -34,8 +34,8 @@ public class Concierto implements Serializable {
     protected long id; //atributo que sirve para identificar al concierto //  valores validos numero entero mayor que 0
     private Date fechaHora; //atributo que sirve para idenfiticar la fechaHora y la hora del concierto// valores validos cadena de caracteres de 20 caracteres
     protected ArrayList<Actuacion> listaActuaciones;//lista que contiene las actuaciones de un concierto //minimo 5 y maximo 10.
-    protected String nombreConcierto;
-    protected long idGira;
+    protected String nombreConcierto; //el nombre del concierto // una cadena de caracteres de tamaño maximo 20
+    protected long idGira;//el id de la gira a la que pertenece el concierto // un id de gira
 
     public String getNombreConcierto() {
         return nombreConcierto;
@@ -80,58 +80,103 @@ public class Concierto implements Serializable {
     public void anadeActuacion(Actuacion actuacion) {
         listaActuaciones.add(actuacion);
     }
-
+    /**
+     * @param i
+     * @return 
+     */
+    public Actuacion getActuacionByPos(int i) {
+        return listaActuaciones.get(i);
+    }
+    /**
+     * metodo constructor de concierto que recibe fecha y hora de comienzo y una lista de actuaciones
+     * @param fechaHora fecha y hora de comienzo
+     * @param nombreConcierto el nombre del concierto
+     * @param listaActuaciones una lista de actuaciones
+     * @deprecated sustituido por {@link #Concierto(java.util.Date, java.lang.String, long) }
+     */
     protected Concierto(Date fechaHora, ArrayList<Actuacion> listaActuaciones) {
         this.fechaHora = fechaHora;
         this.listaActuaciones = listaActuaciones;
     }
-
+    /**
+     * metodo constructor de concierto que recibe la fecha y hora de comienzo, el nombre del concierto y el id de la gira
+     * @param fechaHora la fecha y hora de comienzo
+     * @param nombreConcierto el nombre del concierto 
+     * @param idGira el id de la gira
+     */
+    protected Concierto(Date fechaHora, String nombreConcierto, long idGira) {
+        this.id = id;
+        this.fechaHora = fechaHora;
+        this.nombreConcierto = nombreConcierto;
+        this.idGira = idGira;
+    }
+    /**
+     * metodo constructor privado que es utilizado en la recuperacion de objetos
+     * de un fichero de caracteres.
+     * @param id el id del cocierto
+     * @param fechaHora la fecha y hora de comienzo
+     * @param nombreConcierto el nombre del concierto 
+     * @param idGira el id de la gira
+     */
     protected Concierto(long id, Date fechaHora, String nombreConcierto, long idGira) {
         this.id = id;
         this.fechaHora = fechaHora;
         this.nombreConcierto = nombreConcierto;
         this.idGira = idGira;
     }
-
+    /**
+     * constructor que copia una instancia
+     * @param c la instancia a copiar
+     */
     protected Concierto(Concierto c) {
         this.fechaHora = c.getFechaHora();
         listaActuaciones = c.getListaActuaciones();
     }
-
+    /**
+     * constructor por defecto
+     */
     protected Concierto() {
         listaActuaciones = new ArrayList<Actuacion>();
     }
-
+    
     @Override
     public String toString() {
         return "Concierto{" + "identificador=" + id + ", fecha=" + fechaHora + '}';
     }
-
+    /**
+     * 
+     * metodo que devuelve un string con los datos de momentos serados por | con el siguiente formato.
+     *                      id|fechahora|nombreconcierto|idgira
+     * @return un string con los datos de la clase y el siguiente formato id|nombreArtistico|generoMusica
+     */
     public String data() {
 
         return this.getId() + "|" + this.getFechaHora() + "|" + this.getNombreConcierto() + "|" + this.getIdGira();
     }
-
+    /*
     public Concierto getConciertoById(long id) {
-        /*
+       
         for(Concierto concierto:listaConciertos) {
             if (concierto.getId()==id) {
                 return concierto;
             }
         }    
-         */
+         
         return null;
-    }
-
+    }*/
+    /*
     public ArrayList<Concierto> getAllConciertos() {
         ArrayList<Concierto> nuevaListaConciertos = new ArrayList<Concierto>();
-        /*for(Concierto concierto:listaConcierto) {
+        for(Concierto concierto:listaConcierto) {
             nuevaListaconciertos.add(concierto);
         } 
-         */
+         
         return nuevaListaConciertos;
-    }
-
+    }*/
+    /**
+     * metodo que permite crear un concierto mediante el teclado
+     * @return devuelve el concierto creado por teclado.
+     */
     public static Concierto nuevoConcierto() {
         Concierto concierto = new Concierto();
         Scanner in = new Scanner(System.in);
@@ -154,8 +199,11 @@ public class Concierto implements Serializable {
         return concierto;
 
     }
-
-    public static Concierto nuevoConcierto(Concierto c) {
+    /**
+     * metodo que permite crear un concierto mediante el teclado usado por las subclases
+     * @return devuelve el concierto creado por teclado.
+     */
+    protected static Concierto nuevoConcierto(Concierto c) {
 
         Scanner in = new Scanner(System.in);
         boolean confirmacion;
@@ -176,11 +224,11 @@ public class Concierto implements Serializable {
         in.close();
         return c;
     }
-
-    public Actuacion getActuacionByPos(int i) {
-        return listaActuaciones.get(i);
-    }
-
+    
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaConciertoCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -210,9 +258,13 @@ public class Concierto implements Serializable {
             }
         }
     }
-
+    /**
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los concierto guardados en el fichero
+     */
     public static ArrayList<Concierto> importaConciertoCaracter(String rutaFichero) {
-        ArrayList<Concierto> listaConciertos = new ArrayList<Concierto>();
+        ArrayList<Concierto> listaConciertos = new ArrayList<>();
         FileReader fR = null;
         BufferedReader bR = null;
         try {
@@ -221,10 +273,17 @@ public class Concierto implements Serializable {
             bR = new BufferedReader(fR);
             String lineaActual = "";
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            long id;
+            Date fechaHora;
+            String nombreConcierto;
+            long idGira;
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
-                new Concierto();
-                Concierto con = new Concierto(Long.parseLong(atributos.get(0)), df.parse(atributos.get(1)), atributos.get(2), Long.parseLong(atributos.get(3)));
+                id=Long.parseLong(atributos.get(0));
+                fechaHora=df.parse(atributos.get(1));
+                nombreConcierto=atributos.get(2);
+                idGira=Long.parseLong(atributos.get(3));
+                Concierto con = new Concierto(id,fechaHora,nombreConcierto ,idGira);
                 listaConciertos.add(con);
             }
         } catch (FileNotFoundException ex) {
@@ -249,7 +308,10 @@ public class Concierto implements Serializable {
             return listaConciertos;
         }
     }
-
+     /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaConciertoBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -278,7 +340,11 @@ public class Concierto implements Serializable {
             }
         }
     }
-
+     /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<Concierto> importaConciertoBinario(String rutaFichero) {
         ArrayList<Concierto> listaConciertos = new ArrayList<>();
         FileInputStream fIS = null;
