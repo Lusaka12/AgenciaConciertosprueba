@@ -23,8 +23,8 @@ import java.util.Scanner;
 
 /**
  *
- * @author david
- * @version 1.01
+ * @author Jairo
+ * @version 1.0
  */
 public class Gira {
 
@@ -33,9 +33,10 @@ public class Gira {
     public Date fechaCierre;//atributo que sirve para identificar la fecha de cierre // valores validos cadena de caracteres de 20 caracteres
     private String nombre;// atributo que sirve para identificar el nombre de la gira // valores validos "" si no se ha aportado ningun codigo y un codigo si se ha aportad
     private ArrayList<Concierto> listaConciertos;//lista de conciertos que hay en la gira// valores permitidos minimo 1 y maximo N
-    private Informe informe;
-    private long idInforme;
+    private Informe informe;//objeto que guardara el informe asociado a la gira
+    private long idInforme;//atributo que sirve para identificar al informe
 
+    // getters y setters 
     public Informe getInforme() {
         return informe;
     }
@@ -84,6 +85,16 @@ public class Gira {
         this.listaConciertos = listaConciertos;
     }
 
+    // Constructor con argumentos
+    /**
+     * Crea una instancia de Gira con los siguientes atributos
+     *
+     * @param id id de la gira
+     * @param fechaApertura fecha de apertura de la gira
+     * @param fechaCierre fecha de cierre de la gira
+     * @param nombre nombre de la gira
+     * @param listaConciertos lista de conciertos de la gira
+     */
     public Gira(long id, Date fechaApertura, Date fechaCierre, String nombre, ArrayList<Concierto> listaConciertos) {
         this.id = id;
         this.fechaApertura = fechaApertura;
@@ -91,6 +102,15 @@ public class Gira {
         this.nombre = nombre;
         this.listaConciertos = listaConciertos;
     }
+    
+    /**
+     * metodo constructor privado que es utilizado en la recuperacion de objetos de un fichero de caracteres.
+     * @param id id del objeto
+     * @param idInforme id del informe asociado a la gira
+     * @param nombre nombre de la gira
+     * @param fechaApertura fecha de apertura de la gira
+     * @param fechaCierre fecha de cierre de la gira
+     */
     private Gira(long id,long idInforme,String nombre, Date fechaApertura, Date fechaCierre) {
         this.id = id;
         this.idInforme=idInforme;
@@ -98,23 +118,45 @@ public class Gira {
         this.fechaApertura = fechaApertura;
         this.fechaCierre = fechaCierre;
     }
+    
+    //constructor de copia
+    /**
+     * Crea una instancia de Gira a partir de otra, copiando cada atributo
+     * @param g la gira que se va a copiar
+     */
     public Gira(Gira g) {
         this.fechaApertura = g.getFechaApertura();
         this.fechaCierre = g.getFechaCierre();
         this.listaConciertos = g.getListaConciertos();
     }
-
+    
+    //constructor por defecto
+    /**
+     * Crea una instancia de Gira con los valores por defecto para los atributos
+     */
     public Gira() {
         listaConciertos = new ArrayList<Concierto>();
     }
 
+    //getAll, getById, data y toString
+    /**
+     * Devuelve un <code>String</code> con los datos de la instancia de gira
+     * que llama al metodo
+     *
+     * @return un <code>String</code> con los atributos del objeto en este
+     * orden: <code>id</code>, <code>fechaApertura</code>, <code>fechaCierre</code>,
+     * <code>nombre</code>, <code>listaConciertos</code>, <code>informe</code>
+     */
     @Override
     public String toString() {
         return "Gira{" + "id=" + id + ", fechaApertura=" + fechaApertura + ", fechaCierre=" + fechaCierre + ", nombre=" + nombre + ", listaConciertos=" + listaConciertos + ", informe=" + informe + '}';
     }
 
+    /**
+     * Devuelve un <code>String</code> con los atributos formateados para exportar a un fichero de texto
+     * @return un <code>String</code> con los atributos del objeto en este orden: <code>id</code>, <code>idInforme</code>, <code>nombre</code>, <code>fechaApertura</code>, <code>fechaCierrepertura</code>, <code>fechaRecogida</code>, <code>relieve</code>, separados por una barra vertical
+     */
     public String data() {
-
         return this.getId() + "|"+this.idInforme+"|"+this.nombre + this.getFechaApertura() + "|" + this.getFechaCierre();
 
     }
@@ -135,12 +177,17 @@ public class Gira {
             nuevaListaGira.add(gira);
         }
          */
- /*Este método recorrerá un ArrayList con todas las giras comparando con el id 
+    /*Este método recorrerá un ArrayList con todas las giras comparando con el id 
         que le introduzcamos, y devolverá esa gira si es que existe o 
         nulo si es que no existe*/
         return nuevaListaGiras;
     }
 
+    /**
+     * Crea una nueva instancia de la clase <code>Gira</code> pidiendo
+     * al usuario por pantalla que introduzca los datos
+     * @return el <code>Gira</code> que se crea con el método
+     */
     public Gira nuevoGira() {
         Gira gira = new Gira();
 
@@ -159,9 +206,18 @@ public class Gira {
         return gira;
     }
 
+    /**
+     * Metodo que recorre la lista de conciertos en la gira
+     * @return el concierto de la lista
+     */
     public Concierto getConciertoByPos(int i) {
         return listaConciertos.get(i);
     }
+    
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaGiraCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -191,6 +247,11 @@ public class Gira {
         }
     }
 
+    /**
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los reportero guardados en el fichero
+     */
     public static ArrayList<Gira> importaGiraCaracter(String rutaFichero) {
         ArrayList<Gira> listaGira = new ArrayList<Gira>();
         FileReader fR = null;
@@ -229,6 +290,11 @@ public class Gira {
         }
     }
 
+    /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
+
     public void exportaGiraBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -258,6 +324,11 @@ public class Gira {
         }
     }
 
+    /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<Gira> importaGiraBinario(String rutaFichero) {
         ArrayList<Gira> listaGira = new ArrayList<>();
         FileInputStream fIS = null;

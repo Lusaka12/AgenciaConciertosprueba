@@ -26,17 +26,31 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author david
+ * @author Jairo
+ * @version 1.0
  */
 public class CIndividual extends Concierto implements Serializable {
 
+    //constructor por defecto
+    /**
+     * Crea una instancia de CIndividual con los valores por defecto para los atributos
+     */
     public CIndividual() {
     }
 
+    // constructor con argumentos
+    /**
+     * Crea una instancia de CIndividual con  los atributos propios de la clase
+     * @param fechaHora la fecha del concierto 
+     * @param listaActuaciones la lista de actuaciones del concierto
+     */
     public CIndividual(Date fechaHora, ArrayList<Actuacion> listaActuaciones) {
         super(fechaHora, listaActuaciones);
     }
 
+    /**
+     * @param cindividual concierto a copiar
+     */
     public CIndividual(CIndividual cindividual) {
         super(cindividual);
     }
@@ -45,6 +59,10 @@ public class CIndividual extends Concierto implements Serializable {
         super(id,fechaHora,nombreConcierto, idGira);
     }
 
+    /**
+     * Devuelve un <code>String</code> con los atributos formateados para exportar a un fichero de texto
+     * @return un <code>String</code> con los atributos del objeto en este orden: <code>super</code>, separados por una barra vertical
+     */
     @Override
     public String data() {
         return super.data();
@@ -70,6 +88,10 @@ public class CIndividual extends Concierto implements Serializable {
         return Lci;
     }*/
 
+    /**
+     * Crea una nueva instancia de la clase <code>CIndividual</code> pidiendo al usuario por pantalla que introduzca los datos
+     * @return el <code>CIndividual</code> que se crea con el método
+     */
     public static CIndividual nuevoCIndividual() {
         Concierto concierto = new CIndividual();;
         Scanner in = new Scanner(System.in);
@@ -83,6 +105,10 @@ public class CIndividual extends Concierto implements Serializable {
 
     }
 
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaCIndividualCaracters(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -112,7 +138,12 @@ public class CIndividual extends Concierto implements Serializable {
             }
         }
     }
-
+    
+    /**
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los reportero guardados en el fichero
+     */
     public static ArrayList<CIndividual> importaCIndividualCarinder(String rutaFichero) {
         ArrayList<CIndividual> listaCIndividuales = new ArrayList<CIndividual>();
         FileReader fR = null;
@@ -151,6 +182,11 @@ public class CIndividual extends Concierto implements Serializable {
         }
     }
 
+    /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
+
     public void exportaCIndividualBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -180,6 +216,11 @@ public class CIndividual extends Concierto implements Serializable {
         }
     }
 
+    /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<CIndividual> importaCIndividualBinario(String rutaFichero) {
         ArrayList<CIndividual> listaCIndividuales = new ArrayList<>();
         FileInputStream fIS = null;

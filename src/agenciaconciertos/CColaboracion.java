@@ -26,17 +26,31 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Usuario
+ * @author Jairo
+ * @version 1.0
  */
 public class CColaboracion extends Concierto implements Serializable {
 
+    //constructor por defecto
+    /**
+     * Crea una instancia de CColabroacion con los valores por defecto para los atributos
+     */
     public CColaboracion() {
     }
 
+    // constructor con argumentos
+    /**
+     * Crea una instancia de CColaboracion con  los atributos propios de la clase
+     * @param fechaHora la fecha del concierto 
+     * @param listaActuaciones la lista de actuaciones del concierto
+     */
     public CColaboracion(Date fechaHora, ArrayList<Actuacion> listaActuaciones) {
         super(fechaHora, listaActuaciones);
     }
 
+    /**
+     * @param ccolaboracion concierto a copiar
+     */
     public CColaboracion(CColaboracion ccolaboracion) {
         super(ccolaboracion);
     }
@@ -45,11 +59,19 @@ public class CColaboracion extends Concierto implements Serializable {
         super(id,fechaHora,nombreConcierto, idGira);
     }
     
+    /**
+     * Devuelve un <code>String</code> con los atributos formateados para exportar a un fichero de texto
+     * @return un <code>String</code> con los atributos del objeto en este orden: <code>super</code>, separados por una barra vertical
+     */
     @Override
     public String data() {
         return super.data();
     }
 
+    /**
+     * Crea una nueva instancia de la clase <code>CColaboracion</code> pidiendo al usuario por pantalla que introduzca los datos
+     * @return el <code>CColaboracion</code> que se crea con el método
+     */
     public static CColaboracion nuevoColaboracion() {
         Concierto concierto = new CColaboracion();;
         Scanner in = new Scanner(System.in);
@@ -62,7 +84,11 @@ public class CColaboracion extends Concierto implements Serializable {
         return (CColaboracion) concierto;
 
     }
-
+    
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaCColaboracionCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -93,6 +119,11 @@ public class CColaboracion extends Concierto implements Serializable {
         }
     }
 
+    /**
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los reportero guardados en el fichero
+     */
     public static ArrayList<CColaboracion> importaCColaboracionCarcoler(String rutaFichero) {
         ArrayList<CColaboracion> listaCColaboraciones = new ArrayList<CColaboracion>();
         FileReader fR = null;
@@ -131,6 +162,11 @@ public class CColaboracion extends Concierto implements Serializable {
         }
     }
 
+    /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
+
     public void exportaCColaboracionBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -160,6 +196,11 @@ public class CColaboracion extends Concierto implements Serializable {
         }
     }
 
+    /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<CColaboracion> importaCColaboracionBinario(String rutaFichero) {
         ArrayList<CColaboracion> listaCColaboraciones = new ArrayList<>();
         FileInputStream fIS = null;

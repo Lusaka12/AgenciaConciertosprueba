@@ -24,16 +24,17 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author david
- * @version 1.01
+ * @author Jairo
+ * @version 1.0
  */
 public class Informe {
 
     protected long id;//atributo que sirve para identificarel ID //  valores validos numero entero mayor que 0
     private boolean revisado = false;//Campo para indicar si está revisado o no // valores validos true o false. 
-    private String descripcion;//atributo que sirve para guardar la descripcion // valores validos cadena de caracteres de 20 caracteres
-    private Gira gira; 
+    private String descripcion;//atributo que sirve para guardar la descripcion del informe// valores validos cadena de caracteres de 20 caracteres
+    private Gira gira;//objeto que guardara la gira asociada al informe
 
+    //getters y setters
     public long getId() {
         return id;
     }
@@ -72,6 +73,14 @@ public class Informe {
         this.gira = gira;
     }
 
+    //constructores con argumentos
+    /**
+     * Crea una instancia de Informe con los atributos propios de la clase
+     * @param id el id del informe
+     * @param descripcion la descripcion del informe
+     * @throws InformeException si la descripcion esta vacia o tiene mas de 200 caracteres
+     * @param gira
+     */
     public Informe(long id, String descripcion, Gira gira) {
         this.id = id;
         this.revisado = false;
@@ -83,11 +92,25 @@ public class Informe {
             this.descripcion = "";
         }
     }
-    private Informe(long id,boolean revisado ,String descripcion) {
+    
+    /**
+     * metodo constructor privado que es utilizado en la recuperacion de objetos de un fichero de caracteres.
+     * @param id id del objeto
+     * @param revisado estado del informe
+     * @param descripcion la descripcion del informe
+     */
+    private Informe(long id, boolean revisado, String descripcion) {
         this.id = id;
         this.revisado = revisado;
         this.descripcion = descripcion; 
     }
+    
+    //constructor de copia
+    /**
+     * Crea una instancia de Informe a partir de otra, copiando cada atributo
+     * @param i el Informe que se va a copiar
+     * @throws InformeException si la descripcion esta vacia o tiene mas de 200 caracteres
+     */
     public Informe(Informe i) {
         this.id = i.getId();
         this.revisado = i.isRevisado();
@@ -99,21 +122,36 @@ public class Informe {
             this.descripcion = "";
         }
     }
-
+    
+    //constructor por defecto
+    /**
+     * Crea una instancia de Informe con los valores por defecto para los atributos
+     */
     public Informe() {
-
     }
 
+    //getAll, getById, data y toString
+    /**
+     * Devuelve un <code>String</code> con los datos de la instancia de cliente que llama al metodo
+     * @return un <code>String</code> con los atributos del objeto en este orden: <code>id</code>, <code>revisado</code>, <code>descripcion</code>, <code>gira</code>
+     */
     @Override
     public String toString() {
         return "Informe{" + "identificador=" + id + ", revisado=" + revisado + ", descripcion=" + descripcion + ",gira=" + gira + '}';
     }
 
+    /**
+     * Devuelve un <code>String</code> con los atributos formateados para exportar a un fichero de texto
+     * @return un <code>String</code> con los atributos del objeto en este orden: <code>id</code>, <code>revisado</code>, <code>descripcion</code>,separados por una barra vertical
+     */
     public String data() {
         return this.getId() + "|" + this.isRevisado() + "|" + this.getDescripcion();
 
     }
 
+    /**
+     * Prueba para recorrer informe en la base de datos
+     */
     public Informe getInformeById(long id) {
         /*for (Informe informe : listaInformes) {
             if (informe.getId() == id) {
@@ -130,12 +168,18 @@ public class Informe {
               nuevaListaInformes.add(informe);
           } 
          */
- /*Este método recorrerá un ArrayList con todos los informes, comparando 
+    /*Este método recorrerá un ArrayList con todos los informes, comparando 
         con el id que le introduzcamos, y devolverá el informe si es que existe o 
         nulo si es que no existe*/
         return nuevaListaInforme;
     }
 
+    /**
+     * Crea una nueva instancia de la clase <code>Informe</code> pidiendo
+     * al usuario por pantalla que introduzca los datos
+     *
+     * @return el <code>Informe</code> que se crea con el método
+     */
     public Informe nuevoInforme() {
         Informe informe = new Informe();
         Scanner in = new Scanner(System.in);
@@ -162,6 +206,10 @@ public class Informe {
         return informe;
     }
 
+    /**
+     * Metodo para ver si esta revisado el informe
+     * @return devuelve true si esta revisado o null si no existe el informe
+     */
     public boolean revisarInforme() {
         boolean ret = false;
         if (this != null) {
@@ -176,6 +224,11 @@ public class Informe {
         }
         return ret;
     }
+    
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaInformeCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -205,6 +258,11 @@ public class Informe {
         }
     }
 
+    /**
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los reportero guardados en el fichero
+     */
     public static ArrayList<Informe> importaInformeCaracter(String rutaFichero) {
             ArrayList<Informe> listaInforme = new ArrayList<Informe>();
         FileReader fR = null;
@@ -242,7 +300,11 @@ public class Informe {
                 return listaInforme;
         }
     }
-
+    
+    /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaInformeBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -271,7 +333,12 @@ public class Informe {
             }
         }
     }
-
+    
+    /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<Informe> importaInformeBinario(String rutaFichero) {
         ArrayList<Informe> listaInforme = new ArrayList<>();
         FileInputStream fIS = null;
