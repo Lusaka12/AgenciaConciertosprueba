@@ -21,8 +21,9 @@ import java.util.Scanner;
 
 /**
  *
- * @author DAW102
- * @version 1.01
+ * @author DAW101
+ * @version 1.00
+ * @see Reserva
  */
 public class Usuario {
     protected long id;
@@ -93,7 +94,10 @@ public class Usuario {
     public boolean isVerificado() {
         return verificado;
     }
- 
+ /**
+  * 
+  * @param u usuario que quieres copiar
+  */
     public Usuario(Usuario u) {
         this.nombre = u.getNombre();
         this.apellidos = u.getApellidos();
@@ -104,7 +108,15 @@ public class Usuario {
     public Usuario() {
         this.verificado = false;
     }
-
+/**
+ * 
+ * @param nombre nombre del usuario
+ * @param apellidos apellidos del usuario 
+ * @param email email del usuario
+ * @param NIF nif del usuario
+ * @param verificado atributo que indica si el usuario ha sido verificado
+ * @param reserva objeto de la clase Reserva.
+ */
     public Usuario(String nombre, String apellidos, String email, String NIF, boolean verificado, Reserva reserva) {
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -113,7 +125,15 @@ public class Usuario {
         this.verificado = verificado;
         this.reserva = reserva;
     }
-    
+    /**
+     * 
+     * @param id id del usuario
+     * @param NIF NIF del usuario
+     * @param nombre nombre del usuario
+     * @param apellidos apellidos del usuario
+     * @param email email del usuario
+     * @param verificado atributo que indica si el usuario ha sido verificado
+     */
      private Usuario(long id,String NIF,String nombre, String apellidos, String email, boolean verificado) {
         this.id=id;
         this.email=email;
@@ -148,6 +168,9 @@ public class Usuario {
         */  
         return nuevaListaUsuario;
     }
+ /** 
+ * @return devuelve un nuevo descuento introducido por teclado
+ */
     public Usuario nuevoUsuario(){
         Usuario usuario=new Usuario();
         Scanner in=new Scanner(System.in);
@@ -168,6 +191,10 @@ public class Usuario {
         in.close();
         return usuario;
     }
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaReporteroCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -197,6 +224,11 @@ public class Usuario {
         }
     }
 
+    /**       
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los usuarios guardados en el fichero
+     */
     public static ArrayList<Usuario> importaUsuarioCaracter(String rutaFichero) {
         ArrayList<Usuario> listaUsuario = new ArrayList<Usuario>();
         FileReader fR = null;
@@ -208,8 +240,13 @@ public class Usuario {
             String lineaActual = "";
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
-                Usuario usu = new Usuario(Long.parseLong(atributos.get(0)),atributos.get(1),atributos.get(2),atributos.get(3)
-                        ,atributos.get(4),Boolean.valueOf(atributos.get(5)));
+                long id = Long.parseLong(atributos.get(0));
+                String nombre = atributos.get(1);
+                String apellidos = atributos.get(2);
+                String email = atributos.get(3);
+                String NIF = atributos.get(4);
+                Boolean verificado = Boolean.parseBoolean(atributos.get(5));
+                Usuario usu = new Usuario(id, nombre, apellidos, email, NIF,verificado);                    
                 listaUsuario.add(usu);
             }
         } catch (FileNotFoundException ex) {
@@ -235,6 +272,11 @@ public class Usuario {
         }
     }
 
+    /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
+    
     public void exportaUsuarioBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -263,7 +305,11 @@ public class Usuario {
             }
         }
     }
-
+ /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<Usuario> importaUsuarioBinario(String rutaFichero) {
         ArrayList<Usuario> listaUsuarios = new ArrayList<>();
         FileInputStream fIS = null;

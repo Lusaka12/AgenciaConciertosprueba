@@ -26,8 +26,10 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author DAW102
+ * @author DAW101
  * @version 1.01
+ * @see conicerto
+ * @see reserva
  */
 public class Entrada implements Serializable {
 
@@ -112,9 +114,19 @@ public class Entrada implements Serializable {
     public void setConcierto(Concierto concierto) {
         this.concierto = concierto;
     }
-
-    public Entrada(long id, double precio, boolean esVIP, Concierto concierto, Reserva reserva, boolean disponible, long idCompra, long idConcierto, long idReserva) {
-        this.id = id;
+/**
+ * 
+ * @param id atributo que sirve para identificar a la entrada
+ * @param precio precio de la entrada
+ * @param esVIP atributo que indica si el usuario es vip o no
+ * @param concierto atributo que indica el concierto al que pertenece la entrada
+ * @param reserva atributo que indica la reserva a la que pertenece la entrada.
+ * @param disponible atributo que indica si la entrada esta disponible para su compra.
+ * @param idCompra id de la compra realizada
+ * @param idConcierto id del concierto asociado a la entrada
+ * @param idReserva  id de reserva de la entrada
+ */
+    public Entrada(double precio, boolean esVIP, Concierto concierto, Reserva reserva, boolean disponible, long idCompra, long idConcierto, long idReserva) {
         this.precio = precio;
         this.esVIP = esVIP;
         this.concierto = concierto;
@@ -124,24 +136,42 @@ public class Entrada implements Serializable {
         this.idConcierto = idConcierto;
         this.idReserva = idReserva;
     }
-
-    private Entrada(long id, double precio, boolean esVIP, long idCompra, long idConcierto, long idReserva) {
+/**
+ * @param id atributo que sirve para identificar a la entrada
+ * @param precio precio de la entrada
+ * @param esVIP atributo que indica si el usuario es vip o no
+ * @param concierto atributo que indica el concierto al que pertenece la entrada
+ * @param reserva atributo que indica la reserva a la que pertenece la entrada.
+ * @param disponible atributo que indica si la entrada esta disponible para su compra.
+ * @param idCompra id de la compra realizada
+ * @param idConcierto id del concierto asociado a la entrada
+ * @param idReserva  id de reserva de la entrada
+ */
+    private Entrada(long id, double precio, boolean esVIP, boolean disponible, long idCompra, long idConcierto, long idReserva) {
         this.id = id;
         this.precio = precio;
         this.esVIP = esVIP;
+        this.disponible = disponible;
         this.idCompra = idCompra;
         this.idConcierto = idConcierto;
         this.idReserva = idReserva;
     }
-
+/**
+ * 
+ * @param e entrada que quieres copiar
+ */
     public Entrada(Entrada e) {
         this.precio = e.getPrecio();
         this.esVIP = e.getEsVIP();
         this.concierto = e.getConcierto();
         this.reserva = e.getReserva();
         this.disponible = e.isDisponible();
+        this.idCompra = e.getIdCompra();
+        this.idConcierto = e.getIdConcierto();
+        this.idReserva = e.getIdReserva();
     }
-
+    
+    
     public Entrada() {
 
     }
@@ -153,7 +183,7 @@ public class Entrada implements Serializable {
 
     public String data() {
 
-        return this.getId() + "|" + this.getPrecio() + "|" + this.getEsVIP() + "|" + this.getConcierto() + "|" + this.getReserva() + "|" + this.isDisponible();
+        return this.getId() + "|" + this.getPrecio() + "|" + this.getEsVIP() + "|" + this.isDisponible() +"|" + this.getIdCompra() + "|" + this.getIdConcierto() + "|" + this.getIdReserva();
     }
 
     public Entrada getEntradaById(long id) {
@@ -178,7 +208,10 @@ public class Entrada implements Serializable {
          */
         return nuevaListaEntradas;
     }
-
+/**
+ * 
+ * @return devuelve una nueva entrada introducida por teclado
+ */
     public Entrada nuevaEntrada() {
         Entrada entrada = new Entrada();
         Scanner in = new Scanner(System.in);
@@ -196,6 +229,11 @@ public class Entrada implements Serializable {
         return entrada;
 
     }
+    
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     
         public void exportaEntradaCaracteres(String rutaFichero) {
         FileWriter escritura = null;
@@ -227,6 +265,13 @@ public class Entrada implements Serializable {
         }
     }
 
+        
+     /**       
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todas las entradas guardadas en el fichero
+     */
+     
     public static ArrayList<Entrada> importaEntradaCaracter(String rutaFichero) {
         ArrayList<Entrada> listaEntradas = new ArrayList<Entrada>();
         FileReader fR = null;
@@ -239,7 +284,15 @@ public class Entrada implements Serializable {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
-                Entrada ent= new Entrada(Long.parseLong(atributos.get(0)), Double.parseDouble(atributos.get(1)), Boolean.valueOf(atributos.get(2)), Long.parseLong(atributos.get(3)), Long.parseLong(atributos.get(4)), Long.parseLong(atributos.get(5)));
+                long id = Long.parseLong(atributos.get(0));
+                double precio = Double.parseDouble(atributos.get(1));
+                Boolean esVip = Boolean.valueOf(atributos.get(2)); 
+                Boolean disponible = Boolean.valueOf(atributos.get(3));
+                long idCompra = Long.parseLong(atributos.get(4));
+                long idConcierto = Long.parseLong(atributos.get(5));
+                long idReserva = Long.parseLong(atributos.get(6));
+                
+                Entrada ent= new Entrada(id , precio, esVip, disponible, idCompra,idConcierto,idReserva);
                 listaEntradas.add(ent);
             }
         } catch (FileNotFoundException ex) {
@@ -264,7 +317,10 @@ public class Entrada implements Serializable {
             return listaEntradas;
         }
     }
-
+ /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaEntradaBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -294,6 +350,12 @@ public class Entrada implements Serializable {
         }
     }
 
+    /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
+    
     public static ArrayList<Entrada> importaEntradaBinario(String rutaFichero) {
         ArrayList<Entrada> listaEntradas = new ArrayList<>();
         FileInputStream fIS = null;
