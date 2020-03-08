@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 /**
  * Esta clase contiene los atributos y metodos de la clase compra
  *
- * @author daw101
+ * @author Daw101
  * @version 1.00
  * @see Descuento
  * @see Usuario
@@ -112,6 +112,14 @@ public class Compra implements Serializable{
         this.fechaCompra = fechaCompra;
     }
 
+    /**
+     * 
+     * @param numEntradas numero de entradas de la compra.
+     * @param precioTotal precio total de la compra.
+     * @param metodoPago metodo de pago que se empleará en la compra.
+     * @param codigoDescuento codigo de descuento que se puede emplear o no en la compra.
+     * @param usuarioCompra usuario que compra la entrada.
+     */
     public Compra(int numEntradas, double precioTotal, String metodoPago, String codigoDescuento, Usuario usuarioCompra) {
         this.numEntradas = numEntradas;
         this.precioTotal = precioTotal;
@@ -119,7 +127,17 @@ public class Compra implements Serializable{
         // this.usuarioCompra=usuarioCompra;
 
     }
-
+/**
+ * 
+ * @param id identificador de la compra
+ * @param numEntradas numero de entradas de la compra.
+ * @param precioTotal precio total de la compra.
+ * @param metodoPago metodo de pago que se empleará en la compra.
+ * @param idDescuento codigo de descuento que se puede emplear o no en la compra.
+ * @param fechaCompra fecha de la compra de la entrada
+ * @param idUsuario id del usuario que compra la entrada
+ * @param idEntrada id de la entrada que se ha comprado
+ */
     public Compra(long id, int numEntradas, double precioTotal, String metodoPago, long idDescuento, Date fechaCompra, long idUsuario, long idEntrada) {
         this.id = id;
         this.numEntradas = numEntradas;
@@ -130,6 +148,10 @@ public class Compra implements Serializable{
         this.idUsuario = idUsuario;
         this.idEntrada = idEntrada;
     }
+    /**
+     * recibe una compra y establece los valores que le pasas por el argumento
+     * @param c es la compra que quieres copiar
+     */
 
     public Compra(Compra c) {
         this.numEntradas = c.getNumEntradas();
@@ -149,6 +171,10 @@ public class Compra implements Serializable{
         return "Compra{" + "numEntradas=" + numEntradas + ", identificador=" + id + ", precioTotal=" + precioTotal + ", metodoPago=" + metodoPago + '}';
     }
 
+    /**
+     * 
+     * @return devuelve los datos que obtiene con el get."" separados con el caracter "|".
+     */
     public String data() {
         return this.getId() + "|" + this.getNumEntradas() + "|" + this.getPrecioTotal() + "|" + this.getMetodoPago() + "|" + this.getIdDescuento() + "|" + this.getFechaCompra() + "|" + this.getIdUsuario() + "|" + this.getIdEntrada();
 
@@ -178,7 +204,10 @@ public class Compra implements Serializable{
          */
         return nuevaListaCompras;
     }
-
+/**
+ * 
+ * @return devuelve una nueva compra introducida por teclado 
+ */
     public Compra nuevoCompra() {
         Compra compra = new Compra();
         boolean confirmacion;
@@ -198,6 +227,10 @@ public class Compra implements Serializable{
         return compra;
     }
 
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaCompraCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -227,7 +260,11 @@ public class Compra implements Serializable{
             }
         }
     }
-
+     /**
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todas las compras guardadas en el fichero
+     */
     public static ArrayList<Compra> importaCompraCaracter(String rutaFichero) {
         ArrayList<Compra> listaCompras = new ArrayList<Compra>();
         FileReader fR = null;
@@ -241,12 +278,14 @@ public class Compra implements Serializable{
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
                 long id = Long.parseLong(atributos.get(0));
-                int nentradas = Integer.parseInt(atributos.get(1));
+                int numEntradas = Integer.parseInt(atributos.get(1));
                 double precioTotal = Double.parseDouble(atributos.get(2));
                 String metodoPago = atributos.get(3);
-                long iddesc = Long.parseLong(atributos.get(4));
+                long idDescuento = Long.parseLong(atributos.get(4));
                 Date fecha = df.parse(atributos.get(5));
-                Compra com = new Compra(id, nentradas, precioTotal , metodoPago, iddesc, fecha, Long.parseLong(atributos.get(6)), Long.parseLong(atributos.get(7)));
+                long idUsuario = Long.parseLong (atributos.get(6));
+                long idEntrada = Long.parseLong (atributos.get(7));
+                Compra com = new Compra(id, numEntradas, precioTotal , metodoPago, idDescuento, fecha, idUsuario,idEntrada);
                 listaCompras.add(com);
             }
         } catch (FileNotFoundException ex) {
@@ -273,7 +312,10 @@ public class Compra implements Serializable{
         }
         return listaCompras;
     }
-
+     /**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaCompraBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -302,7 +344,11 @@ public class Compra implements Serializable{
             }
         }
     }
-
+     /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
     public static ArrayList<Compra> importaCompraBinario(String rutaFichero) {
         ArrayList<Compra> listaCompras = new ArrayList<>();
         FileInputStream fIS = null;

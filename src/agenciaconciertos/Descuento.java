@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author DAW113
- * @version 1.01
+ * @author DAW113 DAW101
+ * @version 1.00
  */
 public class Descuento implements Serializable {
     protected long id;
@@ -66,12 +66,21 @@ public class Descuento implements Serializable {
     public void setCantidadDescontada(double cantidadDescontada) {
         this.cantidadDescontada = cantidadDescontada;
     }       
-
+/**
+ * 
+ * @param codigoDescuento código de descuento
+ * @param fechaValidez Cuando va a caducar el codigo descuento
+ * @param cantidadDescontada Cantidad que se descontará, se calculará restando el precio total menos el codigo descuento
+ */
     public Descuento(String codigoDescuento, Date fechaValidez, double cantidadDescontada) {
         this.codigoDescuento = codigoDescuento;
         this.fechaValidez = fechaValidez;
         this.cantidadDescontada = cantidadDescontada;
     }
+    /**
+     * recibe un descuento y establece los valores que le pasas por el argumento
+     * @param d es el descuento que quieres copiar
+     */
     public Descuento(Descuento d) {
         this.codigoDescuento = d.getCodigoDescuento();
         this.fechaValidez = d.getFechaValidez();
@@ -79,7 +88,13 @@ public class Descuento implements Serializable {
     }
     public Descuento() {
     }
-    
+    /**
+     * 
+     * @param id id del descuento
+     * @param codigoDescuento identificar el código de descuento
+     * @param fechaValidez fecha de validez del codigo de descuento
+     * @param cantidadDescontada cantidad que te descuenta el codigo de descuento.
+     */
     private Descuento(long id, String codigoDescuento, Date fechaValidez, double cantidadDescontada) {
         this.id = id;
         this.codigoDescuento = codigoDescuento;
@@ -114,6 +129,10 @@ public class Descuento implements Serializable {
         */  
         return nuevaListaDescuentos;
     }
+    /**
+ * 
+ * @return devuelve fun nuevo descuento introducido por teclado
+ */
     public static Descuento nuevoDescuento (){
         Descuento descuento= new Descuento();
         boolean confirmacion;
@@ -130,6 +149,11 @@ public class Descuento implements Serializable {
         } while (!confirmacion);
         return descuento;
     } 
+    
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     
         public void exportaDescuentoCaracteres(String rutaFichero) {
         FileWriter escritura = null;
@@ -161,6 +185,12 @@ public class Descuento implements Serializable {
         }
     }
 
+/**       
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todos los descuentos guardados en el fichero
+     */
+     
     public static ArrayList<Descuento> importaDescuentoCaracter(String rutaFichero) {
         ArrayList<Descuento> listaDescuentos = new ArrayList<Descuento>();
         FileReader fR = null;
@@ -173,7 +203,11 @@ public class Descuento implements Serializable {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
-                Descuento des= new Descuento(Long.parseLong(atributos.get(0)), atributos.get(1), df.parse(atributos.get(2)),  Double.parseDouble(atributos.get(3)));
+                long id = Long.parseLong(atributos.get(0));
+                String codigoDescuento = atributos.get(1);
+                Date fecha = df.parse(atributos.get(2));
+                double precioTotal = Double.parseDouble(atributos.get(3));
+                Descuento des= new Descuento (id, codigoDescuento, fecha, precioTotal);
                 listaDescuentos.add(des);
             }
         } catch (FileNotFoundException ex) {
@@ -198,7 +232,10 @@ public class Descuento implements Serializable {
             return listaDescuentos;
         }
     }
-
+/**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaDescuentoBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -228,6 +265,12 @@ public class Descuento implements Serializable {
         }
     }
 
+    /**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
+    
     public static ArrayList<Descuento> importaDescuentoBinario(String rutaFichero) {
         ArrayList<Descuento> listaDescuentos = new ArrayList<>();
         FileInputStream fIS = null;

@@ -91,19 +91,38 @@ public class Reserva {
     public void setCodigoDescuento(String codigoDescuento) {
         this.codigoDescuento = codigoDescuento;
     }
-
+/**
+ * 
+ * @param numEntradas numero de entradas de la compra
+ * @param fechaMaxima limite para reservar la entrada
+ * @param codigoDescuento contiene un codigo de descuento que puede ser valido 
+ */
     public Reserva(int numEntradas, Date fechaMaxima, String codigoDescuento) {
         this.numEntradas = numEntradas;
         this.fechaMaxima = fechaMaxima;
         this.codigoDescuento = codigoDescuento;
     }
+    /**
+     * 
+     * @param id atributo que sirve para identificar a la compra
+     * @param idCompra identificador de la compra
+     * @param idUsuario identificador del usuario que realiza la reserva
+     * @param numEntradas numero de entradas de la compra
+     * @param fechaMaxima Limite para reservar la entrada
+     * @param FechaCanjeo fecha en la que se hace efefctiva la reserva y se trata como una compra
+     */
     private Reserva(long id,long idCompra,long idUsuario,int numEntradas, Date fechaMaxima,Date FechaCanjeo) {
         this.id=id;
         this.idCompra=idCompra;
         this.idUsuario=idUsuario;
         this.numEntradas = numEntradas;
         this.fechaMaxima = fechaMaxima;
+        this.fechaCanjeo = FechaCanjeo;
     }
+    /**
+ * 
+ * @param r reserva que quieres copiar
+ */
     public Reserva(Reserva r) {
         this.numEntradas = r.getNumEntradas();
         this.id = r.getId();
@@ -141,7 +160,10 @@ public class Reserva {
          */
         return nuevaListaReserva;
     }
-
+/**
+ * 
+ * @return devuelve una nueva reserva introducida por teclado
+ */
     public Reserva nuevoReserva() {
         Reserva reserva = new Reserva();
         Scanner in = new Scanner(System.in);
@@ -161,6 +183,10 @@ public class Reserva {
         } while (confirmacion != true);
         in.close();
         return reserva;
+/**
+ * 
+ * @return devuelve un nuevo reportero introducido por teclado
+ */
     }
     public static Reportero nuevoReportero() throws ReporteroException{
         Reportero reportero;
@@ -188,6 +214,11 @@ public class Reserva {
         in.close();
         return reportero;
     }
+    
+    /**
+     * metodo que permite preservar en un fichero de texto los valores de la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaReservaCaracteres(String rutaFichero) {
         FileWriter escritura = null;
         BufferedWriter bW = null;
@@ -217,6 +248,12 @@ public class Reserva {
         }
     }
 
+     /**       
+     * metodo que sirve para recuperar los valores de un fichero y reconstruir los objetos con los datos guardados
+     * @param rutaFichero la ruta del fichero del que se va a  los recuperar datos 
+     * @return la lista con todas las reservas guardadas en el fichero
+     */
+    
     public static ArrayList<Reserva> importaReporteroCaracter(String rutaFichero) {
             ArrayList<Reserva> listaReportero = new ArrayList<Reserva>();
         FileReader fR = null;
@@ -229,8 +266,14 @@ public class Reserva {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm");
             while ((lineaActual = bR.readLine()) != null) {
                 ArrayList<String> atributos = ToolBox.separaPorCampos(lineaActual);
-                Reserva repo = new Reserva(Long.parseLong(atributos.get(0)),Long.parseLong(atributos.get(1)),Long.parseLong(atributos.get(2)),
-                        Integer.parseInt(atributos.get(3)),df.parse(atributos.get(4)),df.parse(atributos.get(5)));
+                long id = Long.parseLong(atributos.get(0));
+                long idcompra = Long.parseLong(atributos.get(1));
+                long idusuario = Long.parseLong(atributos.get(2));
+                int numentradas = Integer.parseInt(atributos.get(3));
+                Date fechamaxima = df.parse(atributos.get(4));
+                Date fechacanjeo = df.parse(atributos.get(5));
+                Reserva repo = new Reserva(id, idcompra, idusuario, numentradas,fechamaxima,fechacanjeo);
+                        
                 listaReportero.add(repo);
             }
         } catch (FileNotFoundException ex) {
@@ -255,7 +298,10 @@ public class Reserva {
             return listaReportero;
         }
     }
-
+/**
+     * metodo que permite preservar en un fichero binario la instancia que llama al metodo
+     * @param rutaFichero la ruta del fichero que se va a utilizar para guardar.
+     */
     public void exportaReporteroBinario(String rutaFichero) {
         FileOutputStream fOS = null;
         ObjectOutputStream escribeObjeto = null;
@@ -284,7 +330,12 @@ public class Reserva {
             }
         }
     }
-
+/**
+     * metodo que sirve para recuperar las instancias de un fichero binario que devuelve en una lista 
+     * @param rutaFichero la ruta del fichero que se va a utilizar para recuperar la instancia.
+     * @return la lista de objetos que estaban guardados en la lista
+     */
+    
     public static ArrayList<Reserva> importaReservaBinario(String rutaFichero) {
         ArrayList<Reserva> listaReserva = new ArrayList<>();
         FileInputStream fIS = null;
